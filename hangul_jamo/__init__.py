@@ -50,15 +50,16 @@ def compose(text: str) -> str:
 
     iterator = ngram(text, n=4, pad_right=True)
     for first, second, third, fourth in iterator:
-        if (first in LEADING_CONSONANTS) and (second in VOWELS) and (third in LEADING_CONSONANTS) and (fourth in VOWELS):
-            output += compose_jamo_characters(first, second)
-            consume(iterator, 1)
-        elif (first in LEADING_CONSONANTS) and (second in VOWELS) and (third in TRAILING_CONSONANTS):
-            output += compose_jamo_characters(first, second, third)
-            consume(iterator, 2)
-        elif (first in LEADING_CONSONANTS) and (second in VOWELS):
-            output += compose_jamo_characters(first, second)
-            consume(iterator, 1)
+        if (first in LEADING_CONSONANTS) and (second in VOWELS):
+            if (third in LEADING_CONSONANTS) and (fourth in VOWELS):
+                output += compose_jamo_characters(first, second)
+                consume(iterator, 1)
+            elif (third in TRAILING_CONSONANTS):
+                output += compose_jamo_characters(first, second, third)
+                consume(iterator, 2)
+            else:
+                output += compose_jamo_characters(first, second)
+                consume(iterator, 1)
         else:
             output += first
 
